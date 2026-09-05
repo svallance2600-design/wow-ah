@@ -5,3 +5,7 @@
 *.png
 __pycache__/
 *.pyc
+
+# Local run logs. These change on every scheduled run, so committing them
+# would push an empty commit every hour and defeat the whole no-op design.
+*.log
