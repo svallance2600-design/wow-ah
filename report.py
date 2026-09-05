@@ -33,6 +33,15 @@ import re
 import sqlite3
 import webbrowser
 
+try:
+    import recipes as RECIPES
+except ImportError:
+    RECIPES = None
+
+DEFAULT_SKILLS = (r"C:\Program Files (x86)\World of Warcraft\_anniversary_"
+                  r"\Interface\AddOns\ProfessionMaster\models\skills\bcc.lua")
+
+SKILLS_PATH = [DEFAULT_SKILLS]
 MIN_GOLD = 1.0          # ignore items whose long-run average is below this
 RECIPE = re.compile(r"^(Design|Pattern|Plans|Schematic|Recipe|Formula|Manual|Book):")
 
@@ -146,6 +155,75 @@ def gem_margins(prices):
     return out
 
 
+def craft_rows(conn, skills_path, profession_id):
+    """Craft margins: what it sells for minus what the reagents cost."""
+    if RECIPES is None or not os.path.exists(skills_path):
+        return None
+    price, names, supply = {}, {}, {}
+    for r in conn.execute("""
+            WITH last_tsm AS (
+              SELECT p.item_id, p.market_value,
+                     ROW_NUMBER() OVER (PARTITION BY p.item_id
+                                        ORDER BY s.scan_time DESC) rn
+              FROM item_prices p JOIN snapshots s USING (snapshot_id)
+              WHERE s.source='tsm' AND p.market_value > 0 AND p.item_id IS NOT NULL)
+            SELECT t.item_id, i.name, t.market_value/10000.0 mv
+            FROM last_tsm t JOIN items i ON i.item_id = t.item_id WHERE t.rn = 1"""):
+        price[r["item_id"]] = r["mv"]
+        names[r["item_id"]] = r["name"]
+    for r in conn.execute("""
+            SELECT p.item_id, MAX(p.quantity) q FROM item_prices p
+            JOIN snapshots s USING (snapshot_id)
+            WHERE s.source='auctionator' AND p.item_id IS NOT NULL
+              AND p.day = (SELECT MAX(day) FROM item_prices WHERE day <> '')
+            GROUP BY p.item_id"""):
+        supply[r["item_id"]] = r["q"]
+
+    recs = RECIPES.parse(skills_path)
+    rows = RECIPES.margins(recs, price.get, names, profession=profession_id)
+    for d in rows:
+        d["supply"] = supply.get(d["product_id"])
+    return rows
+
+
+def craft_section(title, rows, limit=20):
+    if rows is None:
+        return ('<section><h2>' + esc(title) + '</h2><p class="sub">Recipe database '
+                'not found - point --skills at ProfessionMaster\'s '
+                'models/skills/bcc.lua.</p></section>')
+    body = []
+    for d in rows[:limit]:
+        sup = d["supply"]
+        # A fat margin on something nobody has listed is usually a price with
+        # no market behind it, not an opportunity.
+        if sup is None or sup == 0:
+            note, cls = "no listings - unproven", "warn"
+        elif d["margin"] <= 0:
+            note, cls = "loses money", "bad"
+        elif sup <= 40:
+            note, cls = "CRAFT", "good"
+        else:
+            note, cls = "crowded", ""
+        reagents = ", ".join(f"{q}x {n}" for n, q in d["reagents"].items())
+        yield_note = "" if d["amount"] == 1 else f' <span class="muted">x{d["amount"]}</span>'
+        body.append(
+            f'<tr><td class="name">{esc(d["product"])}{yield_note}'
+            f'<div class="muted sm">{esc(reagents)}</div></td>'
+            f'<td class="n">{num(d["revenue"], 1)}</td>'
+            f'<td class="n muted">{num(d["cost"], 1)}</td>'
+            f'<td class="n"><b>{num(d["margin"], 1)}</b></td>'
+            f'<td class="n">{(d["margin_pct"] or 0):.0f}%</td>'
+            f'<td class="n">{num(sup, 0)}</td>'
+            f'<td><span class="tag {cls}">{esc(note)}</span></td></tr>')
+    losers = sum(1 for d in rows if d["margin"] <= 0)
+    return f"""
+<section><h2>{esc(title)} <span class="muted">({len(rows)} priceable, {losers} lose money)</span></h2>
+<div class="scroll"><table>
+<thead><tr><th>craft / reagents</th><th class="n">sells for</th><th class="n">reagent cost</th>
+<th class="n">margin</th><th class="n">%</th><th class="n">supply</th><th>call</th></tr></thead>
+<tbody>{''.join(body)}</tbody></table></div></section>"""
+
+
 def esc(s):
     return html.escape(str(s))
 
@@ -195,6 +273,8 @@ def build(conn, out_path):
 <th>trend</th><th>call</th></tr></thead>
 <tbody>{''.join(body)}</tbody></table></div></section>""")
 
+    alch = craft_rows(conn, SKILLS_PATH[0], 171)
+    jc = craft_rows(conn, SKILLS_PATH[0], 755)
     gems = gem_margins(prices)
     grows = "".join(
         f'<tr><td class="name">{esc(g["cut"])}</td>'
@@ -250,6 +330,7 @@ tr:last-child td {{ border-bottom:0 }}
 .n {{ text-align:right }}
 .name {{ max-width:280px }}
 .muted {{ color:var(--muted) }}
+.sm {{ font-size:11px }}
 .spark {{ width:96px; line-height:0 }}
 .tag {{ font-size:11px; padding:2px 7px; border-radius:99px; white-space:nowrap;
   border:1px solid var(--axis); color:var(--ink2) }}
@@ -267,6 +348,9 @@ tr:last-child td {{ border-bottom:0 }}
 {'<div class="note"><b>Trend columns are empty by design.</b> Sparklines need several TSM scans; you have ' + str(tsm_scans) + '. The <b>vs avg</b> column works today because TSM computes the long-run average itself.</div>' if tsm_scans < 4 else ''}
 
 {''.join(parts)}
+
+{craft_section('Alchemy craft margins', alch)}
+{craft_section('Jewelcrafting craft margins', jc)}
 
 <section><h2>Jewelcrafting cut margins <span class="muted">(cut price minus raw gem)</span></h2>
 <p class="sub" style="margin:0 0 12px">Both prices are market value, so this is the
@@ -300,10 +384,13 @@ def main() -> int:
     ap.add_argument("--db", default="auctions.db")
     ap.add_argument("-o", "--out", default="report.html")
     ap.add_argument("--open", action="store_true")
+    ap.add_argument("--skills", default=DEFAULT_SKILLS,
+                    help="ProfessionMaster models/skills/bcc.lua (recipe database)")
     args = ap.parse_args()
     if not os.path.exists(args.db):
         print(f"{args.db} not found - run build_db.py first")
         return 1
+    SKILLS_PATH[0] = args.skills
     conn = sqlite3.connect(args.db)
     conn.row_factory = sqlite3.Row
     path, n, g = build(conn, args.out)
