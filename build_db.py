@@ -86,6 +86,24 @@ def main() -> int:
                 scans += 1
                 price_rows += n
 
+    # Auctionator exports every day it still holds on every run, so importing
+    # repeatedly stacks copies of the same (item, day). Keep only the newest
+    # observation of each - the later scan saw the more complete day.
+    dropped = conn.execute("""
+        DELETE FROM item_prices
+        WHERE day <> ''
+          AND snapshot_id IN (SELECT snapshot_id FROM snapshots
+                              WHERE source = 'auctionator')
+          AND rowid NOT IN (
+              SELECT p.rowid FROM item_prices p
+              JOIN snapshots s USING (snapshot_id)
+              WHERE s.source = 'auctionator' AND p.day <> ''
+              GROUP BY p.item_key, p.day
+              HAVING p.snapshot_id = MAX(p.snapshot_id))
+    """).rowcount
+    if dropped:
+        print(f"  de-duplicated {dropped:,} repeated Auctionator day rows")
+
     names = load_names(args.archive)
     if keep is not None:
         names = [n for n in names if n[0] in keep]
@@ -98,8 +116,9 @@ def main() -> int:
     span = conn.execute(
         "SELECT MIN(scan_time) lo, MAX(scan_time) hi, COUNT(*) n FROM snapshots"
     ).fetchone()
+    price_rows = conn.execute("SELECT COUNT(*) n FROM item_prices").fetchone()["n"]
     distinct = conn.execute(
-        "SELECT COUNT(DISTINCT item_id) n FROM item_prices").fetchone()["n"]
+        "SELECT COUNT(DISTINCT item_key) n FROM item_prices").fetchone()["n"]
     conn.execute("ANALYZE")
     conn.close()
 
@@ -131,22 +150,30 @@ def ingest(conn, meta, scan_time, rows, keep, since) -> int | None:
 
     batch = []
     for row in rows:
-        try:
-            item_id = int(row["item_id"])
-        except (KeyError, TypeError, ValueError):
+        # item_key is the identity; item_id exists only for numeric keys.
+        # Older archive files predate item_key, so fall back to item_id.
+        item_key = (row.get("item_key") or "").strip() or str(
+            row.get("item_id") or "").strip()
+        if not item_key:
             continue
+        item_id = intish(row.get("item_id"))
+        if item_id is None and item_key.isdigit():
+            item_id = int(item_key)
         if keep is not None and item_id not in keep:
             continue
         batch.append((
-            sid, item_id,
+            sid, item_key, item_id,
             intish(row.get("min_buyout")), intish(row.get("market_value")),
             intish(row.get("mean_buyout")), intish(row.get("recent")),
             intish(row.get("historical")), intish(row.get("quantity")),
-            intish(row.get("num_auctions"))))
+            intish(row.get("num_auctions")),
+            (row.get("day") or "").strip(),
+            intish(row.get("day_low")), intish(row.get("day_high"))))
     conn.executemany(
-        "INSERT OR IGNORE INTO item_prices (snapshot_id, item_id, min_buyout, "
-        "market_value, mean_buyout, recent, historical, quantity, num_auctions) "
-        "VALUES (?,?,?,?,?,?,?,?,?)", batch)
+        "INSERT OR IGNORE INTO item_prices (snapshot_id, item_key, item_id, "
+        "min_buyout, market_value, mean_buyout, recent, historical, quantity, "
+        "num_auctions, day, day_low, day_high) "
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
     return len(batch)
 
 

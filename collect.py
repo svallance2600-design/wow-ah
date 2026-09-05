@@ -93,6 +93,7 @@ def collect_tsm(root: str, game_type: str, region: str, realm: str) -> bool:
         if item_id is None:
             continue
         rows.append({
+            "item_key": str(item_id),
             "item_id": item_id,
             "min_buyout": as_int(src.get("minBuyout")),
             "market_value": as_int(src.get("marketValue")),
@@ -161,8 +162,8 @@ def aggregate(auctions: list[dict], depth_fraction: float = 0.25):
         total_qty = sum(q for _, q in entries)
         priced = sorted([(u, q) for u, q in entries if u > 0])
         if not priced:
-            rows.append({"item_id": item_id, "quantity": total_qty,
-                         "num_auctions": len(entries)})
+            rows.append({"item_key": str(item_id), "item_id": item_id,
+                         "quantity": total_qty, "num_auctions": len(entries)})
             continue
         priced_qty = sum(q for _, q in priced)
         target = max(1, int(priced_qty * depth_fraction))
@@ -174,6 +175,7 @@ def aggregate(auctions: list[dict], depth_fraction: float = 0.25):
             if taken >= target:
                 break
         rows.append({
+            "item_key": str(item_id),
             "item_id": item_id,
             "min_buyout": priced[0][0],
             "market_value": acc // taken if taken else priced[0][0],

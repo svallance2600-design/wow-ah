@@ -28,7 +28,9 @@ import sqlite3
 import time
 from dataclasses import dataclass
 
-import requests
+# NOTE: `requests` is imported lazily inside the Blizzard client below, so the
+# archive/schema half of this module - which is all the local Auctionator
+# importer needs - runs on a bare Python install with nothing pip-installed.
 
 OAUTH_URL = "https://oauth.battle.net/token"
 
@@ -53,8 +55,15 @@ AUCTION_HOUSES = {1: "alliance", 2: "alliance", 6: "horde", 7: "neutral"}
 TSM_BASE = "https://public-data.tradeskillmaster.com"
 
 ARCHIVE_COLUMNS = [
-    "item_id", "min_buyout", "market_value", "mean_buyout",
-    "recent", "historical", "quantity", "num_auctions",
+    # identity: item_key is the real key (Auctionator uses strings like
+    # "gr:15181:of the Eagle" for random-enchant greens); item_id is set only
+    # when the key is a plain numeric item id.
+    "item_key", "item_id",
+    # point-in-time figures
+    "min_buyout", "market_value", "mean_buyout", "recent", "historical",
+    "quantity", "num_auctions",
+    # daily buckets (Auctionator only): the day this row describes
+    "day", "day_low", "day_high",
 ]
 
 
@@ -160,7 +169,8 @@ CREATE TABLE IF NOT EXISTS snapshots (
 --   blizzard -> min_buyout, market_value, mean_buyout, quantity, num_auctions
 CREATE TABLE IF NOT EXISTS item_prices (
     snapshot_id   INTEGER NOT NULL REFERENCES snapshots(snapshot_id) ON DELETE CASCADE,
-    item_id       INTEGER NOT NULL,
+    item_key      TEXT    NOT NULL,   -- numeric id as text, or Auctionator's string key
+    item_id       INTEGER,            -- set only when item_key is numeric
     min_buyout    INTEGER,
     market_value  INTEGER,
     mean_buyout   INTEGER,
@@ -168,7 +178,10 @@ CREATE TABLE IF NOT EXISTS item_prices (
     historical    INTEGER,
     quantity      INTEGER,
     num_auctions  INTEGER,
-    PRIMARY KEY (snapshot_id, item_id)
+    day           TEXT,               -- Auctionator daily bucket, else NULL
+    day_low       INTEGER,
+    day_high      INTEGER,
+    PRIMARY KEY (snapshot_id, item_key, day)
 );
 
 CREATE TABLE IF NOT EXISTS items (
@@ -189,11 +202,17 @@ CREATE INDEX IF NOT EXISTS idx_snapshots_time ON snapshots(scan_time);
 CREATE VIEW IF NOT EXISTS prices AS
 SELECT
     s.scan_time                  AS taken_at,
+    -- Use for the time axis: TSM/Blizzard rows are point-in-time, Auctionator
+    -- rows describe a whole day, so this resolves to the right date either way.
+    COALESCE(NULLIF(p.day, ''), DATE(s.scan_time)) AS obs_date,
     s.source,
     s.realm_slug,
     s.faction,
+    p.item_key,
     p.item_id,
-    COALESCE(i.name, 'item:' || p.item_id) AS item_name,
+    COALESCE(i.name, p.item_key)  AS item_name,
+    p.day_low  / 10000.0          AS day_low_gold,
+    p.day_high / 10000.0          AS day_high_gold,
     p.min_buyout                 AS min_buyout_copper,
     p.market_value               AS market_value_copper,
     p.min_buyout   / 10000.0     AS min_buyout_gold,
@@ -244,6 +263,7 @@ class Blizzard:
         return f"https://{self.region}.api.blizzard.com"
 
     def token(self) -> str:
+        import requests
         if self._token and time.time() < self._expires - 60:
             return self._token
         r = requests.post(OAUTH_URL, data={"grant_type": "client_credentials"},
@@ -255,6 +275,7 @@ class Blizzard:
         return self._token
 
     def get(self, path: str, namespace: str, **params):
+        import requests
         params = {"namespace": namespace, "locale": "en_US", **params}
         for attempt in range(4):
             r = requests.get(self.host + path, params=params,

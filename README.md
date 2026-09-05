@@ -133,6 +133,49 @@ Levers when it gets there, cheapest first:
 None of this is urgent on day one. It is here so the decision is informed
 rather than a surprise in eight months.
 
+
+## Auctionator scans (supply data, from your PC)
+
+Blizzard publishes no auction data for Anniversary realms - the endpoints exist
+and return 404 (confirmed on Dreamscythe and, by another player, on EU
+Spineshatter). TSM has data for these realms because it crowdsources player
+scans, not because it has API access.
+
+So supply data has to come off your own machine. `import_auctionator.py` reads
+Auctionator's SavedVariables and writes them into the same archive:
+
+```
+python import_auctionator.py            # look, change nothing
+python import_auctionator.py --commit   # commit and push if the file changed
+```
+
+It keys on the **modification time of**
+`WTF\Account\<account>\SavedVariables\Auctionator.lua`. Unchanged file means
+it exits without writing or committing, so scheduling it costs nothing.
+`run_import.bat` plus a Task Scheduler entry makes it hourly; when the PC is
+off it just doesn't run.
+
+**What you get, and its real resolution.** Auctionator stores per item, per
+*day*: lowest low (`l`), highest low (`h`), highest quantity seen (`a`), and a
+single last-seen minimum price (`m`). So:
+
+- `quantity`, `day_low`, `day_high` are **daily buckets**. Two scans in one day
+  merge into one bucket - you do not get two readings.
+- `min_buyout` comes from `m`, which is **point-in-time** and updates on every
+  scan. This is the only field that distinguishes two scans on the same day, and
+  the importer stamps it only on the day the scan actually happened.
+
+Auctionator also records prices from ordinary AH searches, not just full scans,
+so day buckets can be sparse and partial. A full scan (Auctionator tab -> Scan,
+throttled by the server to once per 15 minutes) is what fills them properly.
+
+Item keys are strings, not always numbers: roughly half are random-enchant
+greens like `gr:15181:of the Eagle`. The `item_key` column preserves them;
+`item_id` is populated only for plain numeric ids.
+
+Use `obs_date` from the `prices` view as the time axis - it resolves to the
+daily bucket for Auctionator rows and to the scan time for TSM rows.
+
 ## Notes
 
 - Prices are **copper** integers in the tables. The `prices` view adds `*_gold`

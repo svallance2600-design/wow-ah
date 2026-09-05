@@ -28,14 +28,14 @@ ORDER BY taken_at;
 -- ---------------------------------------------------------------
 -- 3. Daily high/low/average per watched item.
 -- ---------------------------------------------------------------
-SELECT DATE(taken_at) AS day,
+SELECT obs_date AS day,
        item_name,
        ROUND(MIN(min_buyout_gold), 2)   AS low,
        ROUND(MAX(min_buyout_gold), 2)   AS high,
        ROUND(AVG(market_value_gold), 2) AS avg_market
 FROM prices
 WHERE item_id IN (SELECT item_id FROM watchlist)
-GROUP BY day, item_id
+GROUP BY day, item_key
 ORDER BY day DESC, item_name;
 
 
@@ -75,6 +75,7 @@ SELECT item_name,
        COUNT(*) AS samples
 FROM prices
 WHERE item_id IN (SELECT item_id FROM watchlist)
+  AND source <> 'auctionator'   -- daily buckets have no hour of day
 GROUP BY item_id, server_hour
 HAVING samples >= 2
 ORDER BY item_name, avg_min_buyout;
@@ -134,4 +135,37 @@ WHERE market_value_gold > 1
 GROUP BY item_id
 HAVING samples >= 8
 ORDER BY swing_pct DESC
+LIMIT 30;
+
+
+-- ---------------------------------------------------------------
+-- 9. Supply vs price, from your own Auctionator scans.
+--    The one question the cloud feed cannot answer: how much of a
+--    thing actually exists, and is it getting scarcer?
+-- ---------------------------------------------------------------
+SELECT item_name,
+       obs_date,
+       quantity                        AS units_posted,
+       ROUND(day_low_gold, 2)          AS cheapest,
+       ROUND(day_high_gold, 2)         AS dearest
+FROM prices
+WHERE source = 'auctionator' AND quantity IS NOT NULL
+ORDER BY obs_date DESC, quantity DESC
+LIMIT 40;
+
+
+-- ---------------------------------------------------------------
+-- 10. Thin markets: high value, low supply. Where one seller sets
+--     the price, and where a spike is noise rather than signal.
+-- ---------------------------------------------------------------
+SELECT item_name,
+       quantity                   AS units_posted,
+       ROUND(day_low_gold, 2)     AS price,
+       ROUND(day_low_gold * quantity, 0) AS market_depth_gold
+FROM prices
+WHERE source = 'auctionator'
+  AND obs_date = (SELECT MAX(obs_date) FROM prices WHERE source = 'auctionator')
+  AND day_low_gold > 1
+  AND quantity BETWEEN 1 AND 10
+ORDER BY day_low_gold DESC
 LIMIT 30;
