@@ -1,0 +1,7 @@
+# Derived, rebuildable from data/ - never commit these.
+*.db
+*.db-wal
+*.db-shm
+*.png
+__pycache__/
+*.pyc

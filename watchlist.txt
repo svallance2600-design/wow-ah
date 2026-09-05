@@ -1,0 +1,3 @@
+# Item ids to include when building a filtered database.
+# Collection always captures everything; this is a view filter.
+# Find candidates with:  python watch.py top   /  queries.sql query 7

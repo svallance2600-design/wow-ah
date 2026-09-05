@@ -1,0 +1,66 @@
+name: collect auction scans
+
+on:
+  schedule:
+    # Hourly is the ceiling worth polling: Blizzard refreshes about that often
+    # and TSM every few hours. Unchanged scans write nothing, so extra runs
+    # cost only a few seconds of CI.
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Collection needs only requests; pandas/matplotlib are for local plotting.
+      - run: pip install requests
+
+      - name: Collect
+        env:
+          # Optional. Absent -> the Blizzard source is skipped and TSM still runs.
+          BLIZZARD_CLIENT_ID: ${{ secrets.BLIZZARD_CLIENT_ID }}
+          BLIZZARD_CLIENT_SECRET: ${{ secrets.BLIZZARD_CLIENT_SECRET }}
+          GAME_TYPE: ${{ vars.GAME_TYPE || 'classic' }}
+          REGION: ${{ vars.REGION || 'us-fresh' }}
+          REALM: ${{ vars.REALM || 'dreamscythe-horde' }}
+          BLIZZ_REALM: ${{ vars.BLIZZ_REALM || 'dreamscythe' }}
+          FACTION: ${{ vars.FACTION || 'horde' }}
+        run: |
+          if [ -n "$BLIZZARD_CLIENT_ID" ]; then SOURCE=both; else SOURCE=tsm; fi
+          echo "source=$SOURCE"
+          python collect.py --source "$SOURCE" \
+            --game-type "$GAME_TYPE" --region "$REGION" --realm "$REALM" \
+            --blizz-realm "$BLIZZ_REALM" --faction "$FACTION" \
+            --archive data
+
+      - name: Commit new scans
+        run: |
+          git config user.name  "auction-collector"
+          git config user.email "actions@github.com"
+          # data/ may not exist yet if the very first fetch failed.
+          mkdir -p data
+          git add data
+          if git diff --cached --quiet; then
+            echo "nothing new upstream"
+            exit 0
+          fi
+          git commit -m "scans $(date -u +%Y-%m-%dT%H:%MZ)"
+          # Another run may have landed while this one was working.
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && exit 0
+            sleep 5
+          done
+          exit 1
