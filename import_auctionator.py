@@ -204,7 +204,7 @@ def main() -> int:
         print("working tree clean - nothing to commit")
         return 0
 
-    rc, out = git(["status", "--short", "--cached"], args.repo)
+    rc, out = git(["diff", "--cached", "--name-status"], args.repo)
     print("committing:")
     for line in out.splitlines()[:12]:
         print("  " + line)
