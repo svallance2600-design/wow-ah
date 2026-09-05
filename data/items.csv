@@ -1147,6 +1147,7 @@ item_id,name
 3843,Golden Scale Leggings
 3844,Green Iron Hauberk
 3845,Golden Scale Cuirass
+3846,Polished Steel Boots
 3848,Big Bronze Knife
 3849,Hardened Iron Shortsword
 3850,Jade Serpentblade
@@ -1214,6 +1215,7 @@ item_id,name
 4002,Overlinked Chain Bracers
 4003,Overlinked Chain Cloak
 4004,Overlinked Chain Gloves
+4005,Overlinked Chain Pants
 4006,Overlinked Chain Shoulderpads
 4007,Overlinked Chain Armor
 4017,Sharp Shortsword
@@ -2852,6 +2854,7 @@ item_id,name
 9308,Grime-Encrusted Object
 9313,Green Firework
 9314,Red Streaks Firework
+9315,Yellow Rose Firework
 9317,"Red, White and Blue Firework"
 9318,Red Firework
 9327,Security DELTA Data Access Card
@@ -8512,6 +8515,7 @@ item_id,name
 32717,Karrog's Spine
 32718,Vakkiz's Scale
 32720,Time-Lost Offering
+32722,Enriched Terocone Juice
 32725,Murkblood Miner's Pick
 32727,Vial of Tears
 32737,Plans: Swiftsteel Shoulders
