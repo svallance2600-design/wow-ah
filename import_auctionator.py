@@ -42,6 +42,28 @@ from auctionator import Cbor, day_to_date, extract
 DEFAULT_WOW = r"C:\Program Files (x86)\World of Warcraft\_anniversary_"
 STATE_FILE = ".auctionator_state.json"
 
+# Importing while you're in game pops a console window that steals focus from a
+# fullscreen client. Nothing is lost by waiting: WoW only flushes SavedVariables
+# on /reload or logout, and the scheduled task comes back in an hour.
+GAME_PROCESSES = ["WowClassic.exe", "Wow.exe", "WowT.exe", "WowB.exe",
+                  "World of Warcraft Launcher.exe"]
+
+
+def game_running() -> str | None:
+    """Name of a running WoW process, or None. Windows-only; silent elsewhere."""
+    if os.name != "nt":
+        return None
+    try:
+        out = subprocess.run(["tasklist", "/fo", "csv", "/nh"],
+                             capture_output=True, text=True, timeout=30).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None                      # can't tell - don't block the import
+    lowered = out.lower()
+    for name in GAME_PROCESSES:
+        if f'"{name.lower()}"' in lowered:
+            return name
+    return None
+
 
 def saved_variable_files(wow_root: str) -> list[str]:
     """Every account's Auctionator.lua. .bak files are deliberately excluded."""
@@ -116,7 +138,15 @@ def main() -> int:
                     help="git add/commit/push when something new was written")
     ap.add_argument("--force", action="store_true",
                     help="import even if the file hasn't changed")
+    ap.add_argument("--ignore-game", action="store_true",
+                    help="import even while WoW is running (default: skip)")
     args = ap.parse_args()
+
+    if not args.ignore_game:
+        running = game_running()
+        if running:
+            print(f"{running} is running - skipping, will retry next run")
+            return 0
 
     files = saved_variable_files(args.wow)
     if not files:
