@@ -938,6 +938,7 @@ item_id,name
 3325,Vile Fin Battle Axe
 3327,Vile Fin Oracle Staff
 3328,Spider Web Robe
+3329,Spiked Wooden Plank
 3330,Dargol's Hauberk
 3334,Farmer's Shovel
 3335,Farmer's Broom
@@ -1213,6 +1214,7 @@ item_id,name
 3995,Laminated Scale Cloak
 3997,Laminated Scale Pants
 3998,Laminated Scale Shoulderpads
+3999,Laminated Scale Armor
 4001,Overlinked Chain Boots
 4002,Overlinked Chain Bracers
 4003,Overlinked Chain Cloak
@@ -4172,6 +4174,7 @@ item_id,name
 13816,Fine Longsword
 13817,Tapered Greatsword
 13818,Jagged Axe
+13820,Clout Mace
 13821,Bulky Maul
 13822,Spiked Dagger
 13823,Stout War Staff
@@ -5914,6 +5917,7 @@ item_id,name
 19282,Six of Portals
 19283,Seven of Portals
 19284,Eight of Portals
+19291,Darkmoon Storage Box
 19293,Last Year's Mutton
 19295,Darkmoon Flower
 19304,Spiced Beef Jerky
