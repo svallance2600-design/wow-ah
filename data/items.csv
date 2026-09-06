@@ -1901,6 +1901,7 @@ item_id,name
 6127,Trapper's Boots
 6129,Acolyte's Robe
 6134,Primitive Mantle
+6135,Primitive Kilt
 6136,Thug Shirt
 6137,Thug Pants
 6138,Thug Boots
@@ -6263,6 +6264,7 @@ item_id,name
 21821,Heart Candy
 21822,Heart Candy
 21823,Heart Candy
+21829,Perfume Bottle
 21830,Empty Wrapper
 21833,Cologne Bottle
 21840,Bolt of Netherweave
@@ -6555,6 +6557,7 @@ item_id,name
 23320,Tablet of Flame Shock VI
 23321,Recruit's Robe
 23334,Cracked Power Core
+23345,Scout's Shirt
 23346,Battleworn Claymore
 23353,Mana Residue
 23354,Crystalized Mana Residue
@@ -6615,6 +6618,7 @@ item_id,name
 23523,Khorium Pants
 23524,Khorium Belt
 23525,Khorium Boots
+23526,Swiftsteel Gloves
 23527,Earthpeace Breastplate
 23528,Fel Sharpening Stone
 23529,Adamantite Sharpening Stone
