@@ -73,6 +73,7 @@ item_id,name
 811,Axe of the Deep Woods
 812,Glowing Brightwood Staff
 814,Flask of Oil
+816,Small Hand Blade
 818,Tigerseye
 827,Wicked Blackjack
 828,Small Blue Pouch
@@ -1481,6 +1482,7 @@ item_id,name
 4470,Simple Wood
 4471,Flint and Tinder
 4476,Beastwalker Robe
+4477,Nefarious Buckler
 4478,Iridescent Scale Leggings
 4479,Burning Charm
 4480,Thundering Charm
@@ -1678,6 +1680,8 @@ item_id,name
 4876,Bloody Leather Boot
 4877,Stone Arrowhead
 4878,Broken Bloodstained Bow
+4879,Squashed Rabbit Carcass
+4880,Broken Spear
 4882,Benedict's Key
 4951,Squealer's Belt
 4960,Flash Pellet
@@ -6247,11 +6251,13 @@ item_id,name
 21546,Elixir of Greater Firepower
 21547,Recipe: Elixir of Greater Firepower
 21548,Pattern: Stormshroud Gloves
+21552,Striped Yellowtail
 21557,Small Red Rocket
 21558,Small Blue Rocket
 21559,Small Green Rocket
 21569,Firework Launcher
 21570,Cluster Launcher
+21595,Large Yellow Rocket
 21713,Elune's Candle
 21721,Moonglow
 21722,Pattern: Festival Dress
