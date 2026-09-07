@@ -2860,6 +2860,7 @@ item_id,name
 9304,Recipe: Transmute Iron to Gold
 9305,Recipe: Transmute Mithril to Truesilver
 9308,Grime-Encrusted Object
+9312,Blue Firework
 9313,Green Firework
 9314,Red Streaks Firework
 9315,Yellow Rose Firework
@@ -4306,6 +4307,7 @@ item_id,name
 14139,Mooncloth Shoulders
 14140,Mooncloth Circlet
 14142,Ghostweave Gloves
+14143,Ghostweave Belt
 14144,Ghostweave Pants
 14146,Gloves of Spell Mastery
 14155,Mooncloth Bag
@@ -5552,6 +5554,7 @@ item_id,name
 15985,Arachnidian Branch
 15986,Bonecaster's Star
 15987,Astral Orb
+15988,Resplendent Orb
 15990,Enduring Shield
 15992,Dense Blasting Powder
 15993,Thorium Grenade
@@ -5723,6 +5726,7 @@ item_id,name
 17304,Green Ribboned Wrapping Paper
 17307,Purple Ribboned Wrapping Paper
 17344,Candy Cane
+17402,Greatfather's Winter Ale
 17403,Steamwheedle Fizzy Spirits
 17404,Blended Bean Brew
 17406,Holiday Cheesewheel
