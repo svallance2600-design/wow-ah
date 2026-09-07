@@ -38,6 +38,7 @@ item_id,name
 647,Destiny
 711,Tattered Cloth Gloves
 714,Dirty Leather Gloves
+718,Scalemail Gloves
 720,Brawler Gloves
 723,Goretusk Liver
 727,Notched Shortsword
@@ -945,6 +946,7 @@ item_id,name
 3328,Spider Web Robe
 3329,Spiked Wooden Plank
 3330,Dargol's Hauberk
+3331,Melrache's Cape
 3334,Farmer's Shovel
 3335,Farmer's Broom
 3336,Flesh Piercer
@@ -3661,6 +3663,7 @@ item_id,name
 11305,Dense Shortbow
 11306,Sturdy Recurve
 11307,Massive Longbow
+11308,Sylvan Shortbow
 11325,Dark Iron Ale Mug
 11362,Medium Quiver
 11363,Medium Shot Pouch
@@ -6074,6 +6077,7 @@ item_id,name
 20692,Multicolored Band
 20693,Weighted Cloak
 20694,Glowing Black Orb
+20695,Abyssal War Beads
 20696,Crystal Spiked Maul
 20709,Rumsey Rum Light
 20720,Dark Whisper Blade
@@ -8263,6 +8267,7 @@ item_id,name
 31222,Headdress of Inner Rage
 31223,Illidari Wristguards
 31224,Illidari Bracers
+31225,Illidari Bindings
 31226,Leggings of the Sly
 31227,Feathered Girdle
 31228,Feathered Belt
