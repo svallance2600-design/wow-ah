@@ -33,6 +33,7 @@ item_id,name
 239,Cured Leather Gloves
 285,Scalemail Vest
 286,Scalemail Pants
+287,Scalemail Boots
 414,Dalaran Sharp
 422,Dwarven Mild
 647,Destiny
@@ -1840,6 +1841,7 @@ item_id,name
 5739,Barbaric Harness
 5740,Red Fireworks Rocket
 5741,Rock Chip
+5749,Scythe Axe
 5750,Warchief's Girdle
 5751,Webwing Cloak
 5752,Wyvern Tailspike
