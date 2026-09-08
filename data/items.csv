@@ -59,6 +59,7 @@ item_id,name
 771,Chipped Boar Tusk
 774,Malachite
 776,Vendetta
+779,Shiny Seashell
 783,Light Hide
 785,Mageroyal
 787,Slitherskin Mackerel
@@ -178,6 +179,7 @@ item_id,name
 1380,Frayed Robe
 1384,Dull Blade
 1388,Crooked Staff
+1391,Riverpaw Mystic Staff
 1395,Apprentice's Pants
 1396,Acolyte's Pants
 1399,Magic Candle
@@ -1034,6 +1036,7 @@ item_id,name
 3575,Iron Bar
 3576,Tin Bar
 3577,Gold Bar
+3589,Heavy Weave Belt
 3590,Heavy Weave Bracers
 3592,Padded Bracers
 3596,Tattered Cloth Bracers
@@ -4216,6 +4219,7 @@ item_id,name
 13884,49 Pound Redgill
 13885,34 Pound Redgill
 13886,37 Pound Redgill
+13887,52 Pound Redgill
 13888,Darkclaw Lobster
 13889,Raw Whitescale Salmon
 13890,Plated Armorfish
@@ -7753,8 +7757,10 @@ item_id,name
 25406,Broken Longbow
 25408,Shiny Tail Hair
 25409,Resilient Tail Hair
+25411,Worn Hoof
 25412,Dirt-covered Fur
 25413,Smooth Fur
+25415,Aged Horn
 25416,Oshu'gun Crystal Fragment
 25417,Bloody Fang
 25418,Razor Sharp Fang
