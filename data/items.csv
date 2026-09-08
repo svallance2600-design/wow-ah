@@ -180,6 +180,7 @@ item_id,name
 1384,Dull Blade
 1388,Crooked Staff
 1391,Riverpaw Mystic Staff
+1394,Driftwood Club
 1395,Apprentice's Pants
 1396,Acolyte's Pants
 1399,Magic Candle
@@ -312,6 +313,7 @@ item_id,name
 1745,Laced Mail Vest
 1746,Linked Chain Belt
 1747,Linked Chain Boots
+1748,Linked Chain Bracers
 1749,Linked Chain Cloak
 1750,Linked Chain Gloves
 1751,Linked Chain Pants
@@ -2764,6 +2766,7 @@ item_id,name
 8401,Pattern: Tough Scorpid Leggings
 8402,Pattern: Tough Scorpid Helm
 8409,Pattern: Nightscape Shoulders
+8444,Executioner's Key
 8483,Wastewander Water Pouch
 8485,Cat Carrier (Bombay)
 8486,Cat Carrier (Cornish Rex)
@@ -4963,6 +4966,7 @@ item_id,name
 15082,Heavy Scorpid Belt
 15083,Wicked Leather Gauntlets
 15084,Wicked Leather Bracers
+15085,Wicked Leather Armor
 15086,Wicked Leather Headband
 15087,Wicked Leather Pants
 15088,Wicked Leather Belt
@@ -7694,6 +7698,7 @@ item_id,name
 25341,Dilapidated Cloth Belt
 25342,Dilapidated Cloth Boots
 25343,Dilapidated Cloth Bracers
+25344,Dilapidated Cloth Gloves
 25345,Dilapidated Cloth Hat
 25346,Dilapidated Cloth Pants
 25348,Dilapidated Cloth Vest
