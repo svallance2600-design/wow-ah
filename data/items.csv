@@ -67,7 +67,9 @@ item_id,name
 789,Stout Battlehammer
 790,Forester's Axe
 791,Gnarled Ash Staff
+792,Knitted Sandals
 793,Knitted Gloves
+795,Knitted Tunic
 796,Rough Leather Boots
 804,Large Blue Sack
 805,Small Red Pouch
@@ -206,6 +208,7 @@ item_id,name
 1431,Patchwork Pants
 1433,Patchwork Armor
 1438,Warrior's Shield
+1440,Gnoll Skull Basher
 1443,Jeweled Amulet of Cainwyn
 1447,Ring of Saviors
 1448,Blackrock Gauntlets
@@ -570,6 +573,7 @@ item_id,name
 2407,Pattern: White Leather Jerkin
 2408,Pattern: Fine Leather Gloves
 2409,Pattern: Dark Leather Tunic
+2423,Brigandine Vest
 2447,Peacebloom
 2449,Earthroot
 2450,Briarthorn
@@ -2200,6 +2204,7 @@ item_id,name
 6712,Practice Lock
 6714,Ez-Thro Dynamite
 6716,Schematic: EZ-Thro Dynamite
+6731,Ironforge Breastplate
 6786,Simple Dress
 6787,White Woolen Dress
 6795,White Swashbuckler's Shirt
@@ -5462,6 +5467,7 @@ item_id,name
 15673,Magnificent Belt
 15674,Magnificent Greaves
 15676,Magnificent Leggings
+15677,Magnificent Shoulders
 15679,Triumphant Bracers
 15681,Triumphant Cloak
 15683,Triumphant Girdle
