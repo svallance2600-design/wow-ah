@@ -826,6 +826,7 @@ item_id,name
 3011,Feathered Headdress
 3012,Scroll of Agility
 3013,Scroll of Protection
+3018,Hide of Lupos
 3019,Noble's Robe
 3020,Enduring Cap
 3021,Ranger Bow
@@ -1928,12 +1929,14 @@ item_id,name
 6138,Thug Boots
 6139,Novice's Robe
 6144,Neophyte's Robe
+6147,Ratty Old Belt
 6149,Greater Mana Potion
 6179,Privateer's Cape
 6180,Slarkskin
 6198,Jurassic Wristguards
 6199,Black Widow Band
 6200,Garneg's War Belt
+6201,Lithe Boots
 6211,Recipe: Elixir of Ogre's Strength
 6214,Heavy Copper Maul
 6217,Copper Rod
@@ -5258,6 +5261,7 @@ item_id,name
 15432,Peerless Shoulders
 15433,Peerless Armor
 15434,Supreme Sash
+15435,Supreme Shoes
 15436,Supreme Bracers
 15437,Supreme Cape
 15472,Charger's Belt
@@ -5689,6 +5693,7 @@ item_id,name
 16767,Recipe: Undermine Clam Chowder
 16799,Arcanist Bindings
 16802,Arcanist Belt
+16804,Felheart Bracers
 16817,Girdle of Prophecy
 16819,Vambraces of Prophecy
 16825,Nightslayer Bracelets
@@ -8055,6 +8060,7 @@ item_id,name
 29487,Nature Armor Kit
 29488,Arcane Armor Kit
 29490,Enchanted Felscale Gloves
+29492,Flamescale Leggings
 29493,Flamescale Boots
 29494,Flamescale Belt
 29496,Enchanted Clefthoof Gloves
@@ -8642,6 +8648,7 @@ item_id,name
 34622,Spinesever
 34822,Ancient Coin
 34824,Silver Statuette
+34825,Mithril Shaving Razor
 34826,Gold Wedding Band
 34827,Noble's Monocle
 34828,Antique Silver Cufflinks
