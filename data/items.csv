@@ -1222,6 +1222,7 @@ item_id,name
 3966,Thick Leather Pants
 3967,Thick Leather Shoulderpads
 3968,Thick Leather Tunic
+3971,Smooth Leather Bracers
 3975,Smooth Leather Shoulderpads
 3976,Smooth Leather Armor
 3986,Protective Pavise
@@ -1231,9 +1232,11 @@ item_id,name
 3993,Laminated Scale Boots
 3994,Laminated Scale Bracers
 3995,Laminated Scale Cloak
+3996,Laminated Scale Gloves
 3997,Laminated Scale Pants
 3998,Laminated Scale Shoulderpads
 3999,Laminated Scale Armor
+4000,Overlinked Chain Belt
 4001,Overlinked Chain Boots
 4002,Overlinked Chain Bracers
 4003,Overlinked Chain Cloak
@@ -4204,6 +4207,7 @@ item_id,name
 13816,Fine Longsword
 13817,Tapered Greatsword
 13818,Jagged Axe
+13819,Balanced War Axe
 13820,Clout Mace
 13821,Bulky Maul
 13822,Spiked Dagger
@@ -6413,6 +6417,7 @@ item_id,name
 22307,Pattern: Enchanted Mageweave Pouch
 22308,Pattern: Enchanted Runecloth Bag
 22309,Pattern: Big Bag of Enchantment
+22324,Winter Kimchi
 22373,Wartorn Leather Scrap
 22374,Wartorn Chain Scrap
 22375,Wartorn Plate Scrap
@@ -7805,6 +7810,7 @@ item_id,name
 25440,Cracked Boar Tusk
 25442,Mangled Snout
 25444,Corrosive Ichor
+25445,Wretched Ichor
 25446,Brittle Skull
 25447,Broken Skull
 25450,Creeping Moss
@@ -8634,6 +8640,7 @@ item_id,name
 33823,Bloodfin Catfish
 33824,Crescent-Tail Skullfish
 33825,Skullfish Soup
+33846,Ruined Fishing Net
 33854,Unidentified Eye
 33855,Tarnished Silver Ring
 33856,List of Goods
