@@ -1764,7 +1764,9 @@ item_id,name
 5215,Ember Wand
 5216,Umbral Wand
 5237,Mind-numbing Poison
+5239,Blackbone Wand
 5245,Summoner's Wand
+5254,Rugged Spaulders
 5256,Kovork's Rattle
 5257,Dark Hooded Cape
 5263,Pocket Lint
@@ -6273,6 +6275,7 @@ item_id,name
 21219,Recipe: Sagefish Delight
 21277,Tranquil Mechanical Yeti
 21278,Stormshroud Gloves
+21283,Grimoire of Corruption VII
 21287,Codex of Prayer of Healing V
 21297,Manual of Heroic Strike IX
 21301,Green Helper Box
@@ -6515,6 +6518,7 @@ item_id,name
 22757,Sylvan Crown
 22758,Sylvan Shoulders
 22763,Ironvine Gloves
+22764,Ironvine Belt
 22785,Felweed
 22786,Dreaming Glory
 22787,Ragveil
