@@ -57,6 +57,17 @@ CATEGORIES = {
     "Elixirs": r"^(Elixir of|Adept's Elixir|Onslaught Elixir|Fel Strength|Fel Mana)",
 }
 
+# Items you want a full chart for, not just a sparkline.
+WATCHLIST = {
+    "Heart of Darkness": "BT / Hyjal drop",
+    "Crimson Spinel": "epic red",
+    "Empyrean Sapphire": "epic blue",
+    "Lionseye": "epic yellow",
+    "Pyrestone": "epic orange",
+    "Seaspray Emerald": "epic green",
+    "Shadowsong Amethyst": "epic purple",
+}
+
 GEM_BASES = ["Crimson Spinel", "Lionseye", "Empyrean Sapphire", "Seaspray Emerald",
              "Shadowsong Amethyst", "Pyrestone", "Living Ruby", "Noble Topaz",
              "Talasite", "Star of Elune", "Dawnstone", "Nightseye",
@@ -135,6 +146,110 @@ def spark(vals, w=88, h=20):
             f'preserveAspectRatio="none" aria-hidden="true">'
             f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2" '
             f'stroke-linejoin="round" stroke-linecap="round"/></svg>')
+
+
+def series(conn, name):
+    """Full price series for one item: (scan_time, market, floor)."""
+    return [(r["t"], r["mv"], r["fl"]) for r in conn.execute("""
+        SELECT s.scan_time t, p.market_value/10000.0 mv, p.min_buyout/10000.0 fl
+        FROM item_prices p JOIN snapshots s USING (snapshot_id)
+        JOIN items i ON i.item_id = p.item_id
+        WHERE s.source='tsm' AND i.name = ? AND p.market_value > 0
+        ORDER BY s.scan_time""", (name,))]
+
+
+def chart(pts, w=380, h=132, pad=34):
+    """One item, one chart. Single series needs no legend - the title names it.
+
+    Market value is the line; the cheapest buyout is a faint second line on the
+    SAME axis (both are gold per unit, so this is not a dual axis).
+    """
+    if len(pts) < 3:
+        return '<p class="muted">not enough history yet</p>'
+    mv = [p[1] for p in pts]
+    fl = [p[2] for p in pts if p[2]]
+    # Scale to MARKET VALUE only. The cheapest buyout can swing many times
+    # wider (one cheap listing moves it), and including it in the scale
+    # flattens the line you actually came to read. The floor is drawn on the
+    # same axis but clipped to the plot area.
+    lo, hi = min(mv), max(mv)
+    rng = (hi - lo) or max(hi * 0.1, 1)
+    lo, hi = lo - rng * 0.12, hi + rng * 0.12
+    rng = hi - lo
+
+    def xy(i, v, n):
+        return (pad + i * (w - pad - 8) / (n - 1), h - pad - (v - lo) / rng * (h - pad - 12))
+
+    line = " ".join(f"{x:.1f},{y:.1f}" for i, v in enumerate(mv)
+                    for x, y in [xy(i, v, len(mv))])
+    floor_line = ""
+    clipped = False
+    if len(fl) == len(pts):
+        clipped = min(fl) < lo or max(fl) > hi
+        floor_line = ('<g clip-path="url({{cid_ref}})"><polyline points="' + " ".join(
+            f"{x:.1f},{y:.1f}" for i, v in enumerate(fl)
+            for x, y in [xy(i, v, len(fl))]) +
+            '" fill="none" stroke="var(--muted)" stroke-width="1.5" '
+            'stroke-dasharray="3 3" opacity="0.75"/></g>')
+
+    grid = "".join(
+        f'<line x1="{pad}" y1="{y:.1f}" x2="{w-8}" y2="{y:.1f}" '
+        f'stroke="var(--grid)" stroke-width="1"/>'
+        f'<text x="{pad-6}" y="{y+3.5:.1f}" text-anchor="end" font-size="9" '
+        f'fill="var(--muted)">{lo + rng*f_:.0f}</text>'
+        for f_ in (0.05, 0.5, 0.95)
+        for y in [h - pad - f_ * (h - pad - 12)])
+
+    first, last = pts[0][0][:10], pts[-1][0][:10]
+    lx, ly = xy(len(mv) - 1, mv[-1], len(mv))
+    cid = f"c{abs(hash(tuple(mv))) % 10**8}"
+    floor_line = floor_line.replace("{{cid_ref}}", f"#{cid}")
+    return f"""<svg viewBox="0 0 {w} {h}" width="100%" height="{h}"
+ role="img" aria-label="price history">
+<defs><clipPath id="{cid}"><rect x="{pad}" y="4" width="{w-pad-8}"
+ height="{h-pad-4}"/></clipPath></defs>
+{grid}
+<line x1="{pad}" y1="{h-pad}" x2="{w-8}" y2="{h-pad}" stroke="var(--axis)"/>
+{floor_line}
+<polyline points="{line}" fill="none" stroke="var(--series1)" stroke-width="2"
+ stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="{lx:.1f}" cy="{ly:.1f}" r="3.5" fill="var(--series1)"
+ stroke="var(--surface)" stroke-width="2"/>
+<text x="{pad}" y="{h-10}" font-size="9" fill="var(--muted)">{esc(first)}</text>
+<text x="{w-8}" y="{h-10}" font-size="9" fill="var(--muted)"
+ text-anchor="end">{esc(last)}</text>
+</svg>"""
+
+
+def watch_section(conn, prices):
+    cards = []
+    for name, label in WATCHLIST.items():
+        pts = series(conn, name)
+        r = prices.get(name)
+        if not pts and not r:
+            continue
+        mv = [p[1] for p in pts]
+        now = mv[-1] if mv else (r or {}).get("market")
+        change = ((mv[-1] - mv[0]) / mv[0] * 100) if len(mv) > 1 and mv[0] else None
+        arrow = "" if change is None else ("+" if change >= 0 else "")
+        cls = "" if change is None else ("good" if change >= 0 else "bad")
+        sup = (r or {}).get("supply")
+        cards.append(f"""
+<div class="card">
+  <div class="card-h">
+    <div><b>{esc(name)}</b><div class="muted sm">{esc(label)}</div></div>
+    <div class="card-n">{num(now, 1)}g
+      <div class="sm {cls}">{"" if change is None else f"{arrow}{change:.1f}% / 6d"}</div></div>
+  </div>
+  {chart(pts)}
+  <div class="muted sm">range {num(min(mv), 1) if mv else "-"}g - {num(max(mv), 1) if mv else "-"}g
+   &middot; supply {num(sup, 0)} &middot; solid = market value, dashed = cheapest buyout</div>
+</div>""")
+    if not cards:
+        return ""
+    return (f'<section><h2>Watchlist <span class="muted">'
+            f'({len(cards)} items)</span></h2><div class="grid">'
+            + "".join(cards) + "</div></section>")
 
 
 def gem_margins(prices):
@@ -273,6 +388,7 @@ def build(conn, out_path):
 <th>trend</th><th>call</th></tr></thead>
 <tbody>{''.join(body)}</tbody></table></div></section>""")
 
+    watch_html = watch_section(conn, prices)
     alch = craft_rows(conn, SKILLS_PATH[0], 171)
     jc = craft_rows(conn, SKILLS_PATH[0], 755)
     gems = gem_margins(prices)
@@ -298,18 +414,21 @@ def build(conn, out_path):
   --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e;
   --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
   --good:#0ca30c; --bad:#d03b3b; --warn:#fab219; --info:#2a78d6;
+  --series1:#2a78d6;
 }}
 @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{
   color-scheme: dark;
   --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink2:#c3c2b7;
   --muted:#898781; --grid:#2c2c2a; --axis:#383835;
   --good:#0ca30c; --bad:#e66767; --warn:#fab219; --info:#3987e5;
+  --series1:#3987e5;
 }} }}
 :root[data-theme="dark"] {{
   color-scheme: dark;
   --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink2:#c3c2b7;
   --muted:#898781; --grid:#2c2c2a; --axis:#383835;
   --good:#0ca30c; --bad:#e66767; --warn:#fab219; --info:#3987e5;
+  --series1:#3987e5;
 }}
 * {{ box-sizing:border-box }}
 body {{ margin:0; background:var(--page); color:var(--ink);
@@ -331,6 +450,12 @@ tr:last-child td {{ border-bottom:0 }}
 .name {{ max-width:280px }}
 .muted {{ color:var(--muted) }}
 .sm {{ font-size:11px }}
+.good {{ color:var(--good) }}
+.bad {{ color:var(--bad) }}
+.grid {{ display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) }}
+.card {{ border:1px solid var(--grid); border-radius:8px; padding:12px }}
+.card-h {{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:6px }}
+.card-n {{ text-align:right; font-size:17px; font-variant-numeric:tabular-nums }}
 .spark {{ width:96px; line-height:0 }}
 .tag {{ font-size:11px; padding:2px 7px; border-radius:99px; white-space:nowrap;
   border:1px solid var(--axis); color:var(--ink2) }}
@@ -346,6 +471,8 @@ tr:last-child td {{ border-bottom:0 }}
 ({tsm_scans} TSM) &middot; {esc(str(span['lo'])[:16])} to {esc(str(span['hi'])[:16])}</p>
 
 {'<div class="note"><b>Trend columns are empty by design.</b> Sparklines need several TSM scans; you have ' + str(tsm_scans) + '. The <b>vs avg</b> column works today because TSM computes the long-run average itself.</div>' if tsm_scans < 4 else ''}
+
+{watch_html}
 
 {''.join(parts)}
 
