@@ -1547,6 +1547,7 @@ item_id,name
 4587,Tribal Raptor Feathers
 4588,Pristine Raptor Skull
 4589,Long Elegant Feather
+4590,Curved Yellow Bill
 4592,Longjaw Mud Snapper
 4593,Bristle Whisker Catfish
 4594,Rockscale Cod
@@ -2082,6 +2083,7 @@ item_id,name
 6431,Imperial Leather Boots
 6432,Imperial Cloak
 6433,Imperial Leather Helm
+6440,Brainlash
 6444,Forked Tongue
 6445,Brittle Molting
 6450,Silk Bandage
@@ -2815,6 +2817,7 @@ item_id,name
 8750,Thick Leather Hat
 8751,Overlinked Coif
 8752,Laminated Scale Circlet
+8753,Smooth Leather Helmet
 8754,Twill Cover
 8755,Light Plate Helmet
 8766,Morning Glory Dew
@@ -4250,6 +4253,7 @@ item_id,name
 13893,Large Raw Mightfish
 13896,Dark Green Wedding Hanbok
 13897,White Traditional Hanbok
+13898,Royal Dangui
 13899,Red Traditional Hanbok
 13900,Green Wedding Hanbok
 13901,15 Pound Salmon
@@ -5641,6 +5645,7 @@ item_id,name
 16111,Recipe: Spiced Chili Crab
 16112,Manual: Heavy Silk Bandage
 16113,Manual: Mageweave Bandage
+16167,Versicolor Treat
 16202,Lesser Eternal Essence
 16203,Greater Eternal Essence
 16204,Illusion Dust
