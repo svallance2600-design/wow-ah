@@ -1052,6 +1052,7 @@ item_id,name
 3590,Heavy Weave Bracers
 3592,Padded Bracers
 3596,Tattered Cloth Bracers
+3603,Knitted Bracers
 3606,Woven Belt
 3607,Woven Bracers
 3608,Plans: Mighty Iron Hammer
@@ -1226,6 +1227,7 @@ item_id,name
 3966,Thick Leather Pants
 3967,Thick Leather Shoulderpads
 3968,Thick Leather Tunic
+3969,Smooth Leather Belt
 3971,Smooth Leather Bracers
 3975,Smooth Leather Shoulderpads
 3976,Smooth Leather Armor
@@ -1698,6 +1700,7 @@ item_id,name
 4865,Ruined Pelt
 4867,Broken Scorpid Leg
 4872,Dry Scorpid Eye
+4874,Clean Fishbones
 4875,Slimy Bone
 4876,Bloody Leather Boot
 4877,Stone Arrowhead
@@ -3541,6 +3544,7 @@ item_id,name
 10421,Rough Copper Vest
 10423,Silvered Bronze Leggings
 10424,Plans: Silvered Bronze Leggings
+10450,Undamaged Hippogryph Feather
 10463,Pattern: Shadoweave Mask
 10498,Gyromatic Micro-Adjustor
 10499,Bright-Eye Goggles
@@ -6644,6 +6648,7 @@ item_id,name
 23346,Battleworn Claymore
 23353,Mana Residue
 23354,Crystalized Mana Residue
+23355,Toxic Helboar Meat
 23380,Broken Power Core
 23381,Chipped Power Core
 23383,Ripped Wyrm Scale
