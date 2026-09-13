@@ -600,6 +600,7 @@ item_id,name
 2494,Stiletto
 2495,Walking Stick
 2504,Worn Shortbow
+2505,Polished Shortbow
 2506,Hornwood Recurve Bow
 2507,Laminated Recurve Bow
 2508,Old Blunderbuss
@@ -2215,6 +2216,7 @@ item_id,name
 6663,Recipe: Elixir of Giant Growth
 6672,Schematic: Flash Bomb
 6709,Moonglow Vest
+6710,Pattern: Moonglow Vest
 6712,Practice Lock
 6714,Ez-Thro Dynamite
 6716,Schematic: EZ-Thro Dynamite
@@ -6979,6 +6981,7 @@ item_id,name
 24510,Primordial Core
 24511,Primordial Essence
 24516,Damaged Rock Flayer Talon
+24517,Blood Soaked Tail
 24539,Marsh Lichen
 24575,Outlander's Girdle
 24576,Loosely Threaded Belt
