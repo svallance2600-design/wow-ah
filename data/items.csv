@@ -94,6 +94,7 @@ item_id,name
 845,Tanned Leather Pants
 846,Tanned Leather Jerkin
 847,Chainmail Armor
+850,Chainmail Gloves
 851,Cutlass
 852,Mace
 853,Hatchet
@@ -400,6 +401,7 @@ item_id,name
 1840,Rough Leather Bracers
 1843,Tanned Leather Belt
 1844,Tanned Leather Bracers
+1845,Chainmail Belt
 1846,Chainmail Bracers
 1849,Cured Leather Belt
 1850,Cured Leather Bracers
