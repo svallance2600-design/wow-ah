@@ -1103,6 +1103,7 @@ item_id,name
 3719,Hillman's Cloak
 3726,Big Bear Steak
 3727,Hot Lion Chops
+3728,Tasty Lion Steak
 3729,Soothing Turtle Bisque
 3730,Big Bear Meat
 3731,Lion Meat
@@ -1235,6 +1236,7 @@ item_id,name
 3968,Thick Leather Tunic
 3969,Smooth Leather Belt
 3971,Smooth Leather Bracers
+3972,Smooth Cloak
 3975,Smooth Leather Shoulderpads
 3976,Smooth Leather Armor
 3986,Protective Pavise
@@ -2586,6 +2588,7 @@ item_id,name
 8068,Crafted Heavy Shot
 8069,Crafted Solid Shot
 8081,Light Plate Belt
+8082,Light Plate Boots
 8084,Light Plate Gloves
 8086,Light Plate Shoulderpads
 8106,Hibernal Armor
@@ -4827,6 +4830,7 @@ item_id,name
 14797,Protector Pads
 14798,Bloodlust Breastplate
 14799,Bloodlust Boots
+14800,Bloodlust Buckler
 14801,Bloodlust Cape
 14802,Bloodlust Gauntlets
 14803,Bloodlust Belt
