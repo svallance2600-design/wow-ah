@@ -1555,6 +1555,7 @@ item_id,name
 4575,Medicine Staff
 4576,Light Bow
 4577,Compact Shotgun
+4581,Patch of Fine Fur
 4582,Soft Bushy Tail
 4583,Thick Furry Mane
 4584,Large Trophy Paw
@@ -1885,6 +1886,7 @@ item_id,name
 5764,Green Silk Pack
 5765,Black Silk Pack
 5766,Lesser Wizard's Robe
+5767,Violet Robes
 5770,Robes of Arcana
 5771,Pattern: Red Linen Bag
 5772,Pattern: Red Woolen Bag
@@ -4528,6 +4530,7 @@ item_id,name
 14305,Bonecaster's Sarong
 14306,Bonecaster's Vest
 14307,Bonecaster's Crown
+14308,Celestial Tunic
 14309,Celestial Belt
 14310,Celestial Slippers
 14311,Celestial Bindings
@@ -8685,6 +8688,7 @@ item_id,name
 33208,Flask of Chromatic Wonder
 33209,Recipe: Flask of Chromatic Wonder
 33234,Iced Berry Slush
+33236,"Fizzy Faire Drink ""Classic"""
 33254,Forest Strider Drumstick
 33782,Steady Talasite
 33791,Heavy Copper Longsword
