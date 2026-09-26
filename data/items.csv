@@ -336,6 +336,7 @@ item_id,name
 1755,Reinforced Chain Boots
 1756,Reinforced Chain Bracers
 1757,Reinforced Chain Cloak
+1758,Reinforced Chain Gloves
 1759,Reinforced Chain Pants
 1760,Reinforced Chain Shoulderpads
 1761,Reinforced Chain Vest
@@ -8278,6 +8279,7 @@ item_id,name
 30746,Mining Sack
 30747,Gem Pouch
 30748,Enchanter's Satchel
+30750,Draenic Warblade
 30752,Mag'hari Battleaxe
 30753,Warphorn Spear
 30755,Mag'hari Fighting Claw
